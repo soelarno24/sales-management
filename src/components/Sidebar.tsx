@@ -17,8 +17,23 @@ const navItems: NavItem[] = [
   { icon: 'analytics', label: 'Reporting' },
 ];
 
-export default function Sidebar() {
-  const [activeIndex, setActiveIndex] = useState(0);
+interface SidebarProps {
+  onLogout?: () => void;
+  activeIndex?: number;
+  onNavigate?: (index: number) => void;
+}
+
+export default function Sidebar({ onLogout, activeIndex = 0, onNavigate }: SidebarProps) {
+  const [localActive, setLocalActive] = useState(0);
+  const currentActive = onNavigate ? activeIndex : localActive;
+
+  const handleClick = (index: number) => {
+    if (onNavigate) {
+      onNavigate(index);
+    } else {
+      setLocalActive(index);
+    }
+  };
 
   return (
     <aside className="h-screen w-72 fixed left-0 top-0 z-40 bg-surface flex flex-col py-8 px-6 gap-y-6">
@@ -28,9 +43,9 @@ export default function Sidebar() {
           <Icon name="business_center" />
         </div>
         <div>
-          <h1 className="font-headline text-xl text-on-surface leading-tight">Alexandria</h1>
+          <h1 className="font-headline text-xl text-on-surface leading-tight">Agent Properti</h1>
           <p className="font-label uppercase tracking-widest text-[10px] font-semibold text-on-secondary-fixed-variant">
-            Editorial Curator
+            Manajemen Sales Properti
           </p>
         </div>
       </div>
@@ -43,10 +58,10 @@ export default function Sidebar() {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              setActiveIndex(index);
+              handleClick(index);
             }}
             className={`flex items-center gap-3 px-4 py-3 transition-all ${
-              activeIndex === index
+              currentActive === index
                 ? 'text-on-primary-fixed-variant font-bold bg-primary-fixed rounded-lg scale-[0.98]'
                 : 'text-on-secondary-fixed-variant hover:text-on-surface hover:bg-surface-container-high'
             }`}
@@ -69,13 +84,13 @@ export default function Sidebar() {
           <Icon name="help" />
           <span className="font-label uppercase tracking-widest text-[10px] font-semibold">Support</span>
         </a>
-        <a
-          href="#"
-          className="flex items-center gap-3 px-4 py-2 text-on-secondary-fixed-variant hover:text-on-surface transition-all"
+        <button
+          onClick={onLogout}
+          className="flex items-center gap-3 px-4 py-2 text-on-secondary-fixed-variant hover:text-on-surface transition-all cursor-pointer w-full"
         >
           <Icon name="logout" />
           <span className="font-label uppercase tracking-widest text-[10px] font-semibold">Sign Out</span>
-        </a>
+        </button>
       </div>
     </aside>
   );

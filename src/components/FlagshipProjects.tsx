@@ -8,7 +8,7 @@ interface Project {
 
 const projects: Project[] = [
   {
-    name: 'The Alexandria Residences',
+    name: 'The Grand Residences',
     location: 'Downtown Central District',
     soldPercent: 98,
     badgeColor: 'text-on-primary-fixed-variant bg-primary-fixed',
