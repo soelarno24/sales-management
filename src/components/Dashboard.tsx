@@ -32,6 +32,7 @@ const searchPlaceholders = [
 
 export default function Dashboard({ onLogout }: DashboardProps) {
   const [pageIndex, setPageIndex] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [adminProfile, setAdminProfile] = useState<AdminProfile>(defaultProfile);
@@ -43,18 +44,18 @@ export default function Dashboard({ onLogout }: DashboardProps) {
   };
 
   const renderDashboardHome = () => (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto w-full">
+    <div className="p-4 lg:p-8 space-y-8 max-w-7xl mx-auto w-full">
       <section className="flex flex-col md:flex-row justify-between items-end gap-6">
         <div>
-          <h2 className="font-headline text-4xl font-bold text-on-surface tracking-tight mb-2">Portfolio Overview</h2>
+          <h2 className="font-headline text-3xl lg:text-4xl font-bold text-on-surface tracking-tight mb-2">Portfolio Overview</h2>
           <p className="text-on-surface-variant max-w-lg font-body leading-relaxed">
             Ringkasan editorial dari kepemilikan properti Anda dan performa penjualan. Pantau metrik global di semua agen dan developer.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
           <div className="px-4 py-2 bg-surface-container-low rounded-lg flex items-center gap-2 text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">
             <Icon name="calendar_today" className="text-sm" />
-            Oct 24, 2023 — Oct 31, 2023
+            Oct 24 — Oct 31, 2023
           </div>
           <button className="px-4 py-2 bg-primary text-on-primary rounded-lg text-xs font-label font-bold uppercase tracking-widest hover:shadow-lg transition-all cursor-pointer">
             Download Report
@@ -75,9 +76,17 @@ export default function Dashboard({ onLogout }: DashboardProps) {
 
   return (
     <div className="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed min-h-screen">
-      <Sidebar onLogout={onLogout} activeIndex={pageIndex} onNavigate={setPageIndex} />
+      {/* Sidebar */}
+      <Sidebar
+        onLogout={onLogout}
+        activeIndex={pageIndex}
+        onNavigate={setPageIndex}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
-      <main className="pl-72 min-h-screen flex flex-col bg-surface-container-lowest">
+      {/* Main Content - responsive padding */}
+      <main className="lg:pl-72 min-h-screen flex flex-col bg-surface-container-lowest">
         <Header
           searchPlaceholder={searchPlaceholders[pageIndex] || searchPlaceholders[0]}
           adminName={adminProfile.name}
@@ -85,6 +94,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
           adminAvatar={adminProfile.avatar}
           onSettingsClick={() => setShowSettings(true)}
           onProfileClick={() => setShowProfile(true)}
+          onMenuToggle={() => setSidebarOpen(true)}
         />
 
         {pageIndex === 0 && renderDashboardHome()}
